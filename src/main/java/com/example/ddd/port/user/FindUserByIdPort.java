@@ -1,4 +1,4 @@
-package com.example.ddd.repository;
+package com.example.ddd.port.user;
 
 import com.example.ddd.model.Guid;
 import org.apache.catalina.User;

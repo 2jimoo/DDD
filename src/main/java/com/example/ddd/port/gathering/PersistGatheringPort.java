@@ -1,7 +1,6 @@
-package com.example.ddd.repository;
+package com.example.ddd.port.gathering;
 
 import com.example.ddd.model.Gathering;
-import com.example.ddd.model.Guid;
 
 public interface PersistGatheringPort {
 
