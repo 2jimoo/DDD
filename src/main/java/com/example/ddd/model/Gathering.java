@@ -1,5 +1,6 @@
 package com.example.ddd.model;
 
+import com.example.ddd.handler.command.GatheringCreatorSpecifier;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -7,6 +8,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Getter
 public class Gathering {
@@ -47,8 +49,13 @@ public class Gathering {
             Optional<String> location,
             Optional<Integer> maximumNumberOfAttendees,
             Optional<Integer> invitationExpireAt,
-            Optional<Integer> numberOfAttendees
+            Optional<Integer> numberOfAttendees,
+            Supplier<Boolean> userValidate
     ) {
+        if(userValidate.get()){
+           throw new IllegalArgumentException("User %s cannot be creator.".formatted(creator.guid()));
+        }
+
         if (type == null) {
             throw new IllegalArgumentException("Type is required.");
         } else if (!EnumSet.allOf(GatheringType.class).contains(type)) {

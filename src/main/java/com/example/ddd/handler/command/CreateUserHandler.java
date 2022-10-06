@@ -1,6 +1,7 @@
 package com.example.ddd.handler.command;
 
 import com.example.ddd.command.CreateUserCommand;
+import com.example.ddd.model.Email;
 import com.example.ddd.model.Guid;
 import com.example.ddd.model.User;
 import com.example.ddd.port.user.FindUserByEmailPort;
@@ -16,10 +17,10 @@ public class CreateUserHandler {
     private final PersistUserPort persistUserPort;
 
     public Guid handle(CreateUserCommand command) {
-        User user = new User(command.userId(), command.firstName(), command.firstName(), command.email());
+        User user = new User(command.userId(), command.firstName(), command.firstName(), Email.of(command.email()));
 
-        UserEmailSpecification userEmailSpecification = new UserEmailSpecification(findUserByEmailPort);
-        userEmailSpecification.isSatisfiedOrThrow(user);
+//        UserEmailSpecification userEmailSpecification = new UserEmailSpecification(findUserByEmailPort);
+//        userEmailSpecification.isSatisfiedOrThrow(user);
 
         User persistedUser = persistUserPort.insert(user);
         return persistedUser.getUserId();
