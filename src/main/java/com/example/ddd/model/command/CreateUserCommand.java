@@ -1,4 +1,4 @@
-package com.example.ddd.command;
+package com.example.ddd.model.command;
 
 import com.example.ddd.model.Guid;
 
