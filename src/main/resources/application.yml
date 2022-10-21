@@ -1,0 +1,26 @@
+spring:
+  #h2 console ??? ? ?? ??
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  #h2 db ??
+  datasource:
+    url: jdbc:h2:~/test;
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  #hibernate ??
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: true
+        hbm2ddl:
+          auto: create
+# https://bamdule.tistory.com/246
+# https://umanking.github.io/2019/04/12/jpa-h2-setting/
+server:
+  port: 8089
