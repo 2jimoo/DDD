@@ -3,19 +3,23 @@ package com.example.ddd.webapp.out;
 
 import com.example.ddd.domain.model.Email;
 import com.example.ddd.domain.model.Guid;
+import com.example.ddd.domain.model.User;
+import com.example.ddd.domain.port.out.user.FindAllUserByIdsPort;
 import com.example.ddd.domain.port.out.user.FindUserByEmailPort;
 import com.example.ddd.domain.port.out.user.FindUserByIdPort;
 import com.example.ddd.domain.port.out.user.PersistUserPort;
 import com.example.ddd.webapp.out.repository.User.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class UserAdapter implements PersistUserPort, FindUserByIdPort, FindUserByEmailPort {
+public class UserAdapter implements FindUserByIdPort, FindAllUserByIdsPort, FindUserByEmailPort, PersistUserPort {
     private final UserRepository userRepository;
 
     @Override
@@ -24,12 +28,18 @@ public class UserAdapter implements PersistUserPort, FindUserByIdPort, FindUserB
     }
 
     @Override
-    public Optional<com.example.ddd.domain.model.User> findUserById(Guid userId) {
+    public Optional<User> findUserById(Guid userId) {
         return Optional.empty();
     }
 
     @Override
-    public com.example.ddd.domain.model.User insert(com.example.ddd.domain.model.User user) {
+    public Collection<User> findAllByIds(Collection<Guid> ids) {
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public User persist(User user, Instant requestedAt, Guid requestedBy) {
         return null;
     }
 }

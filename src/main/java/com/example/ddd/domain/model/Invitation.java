@@ -3,7 +3,6 @@ package com.example.ddd.domain.model;
 import lombok.Getter;
 
 import java.time.Instant;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 @Getter
@@ -11,8 +10,8 @@ public class Invitation {
     private final Guid id;
     private final Guid userId; // receiver?
     private final Guid gatheringId;
-    private InvitationStatus status;
     private final Instant createdAt;
+    private InvitationStatus status;
 
 
     public Invitation(Guid id, Guid receiverId, Guid gatheringId, InvitationStatus status, Instant createdAt) {

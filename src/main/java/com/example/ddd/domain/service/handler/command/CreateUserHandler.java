@@ -20,7 +20,7 @@ public class CreateUserHandler {
     public Guid handle(CreateUserCommand command) {
         User user = User.of(command.userId(), command.firstName(), command.firstName(), Email.of(command.email()),
                 () -> findUserByEmailPort.findUserByEmail(Email.of(command.email())).isPresent());
-        User persistedUser = persistUserPort.insert(user);
+        User persistedUser = persistUserPort.persist(user, command.requestedAt(), command.requestedBy());
         return persistedUser.getUserId();
     }
 }

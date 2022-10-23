@@ -44,7 +44,7 @@ public class AcceptInvitationHandler {
         );
 
         //- invitation accepted/expired event 받아 update and merge gathering
-        Invitation invitationAfterRespond = mergeInvitationPort.merge(invitation);
+        Invitation invitationAfterRespond = mergeInvitationPort.merge(invitation, command.requestedAt(), command.requestedBy());
         eventEventPublisher.publish(new InvitationRespondedEvent(invitationBeforeRespond, invitationAfterRespond));
         return invitationAfterRespond.getId();
     }

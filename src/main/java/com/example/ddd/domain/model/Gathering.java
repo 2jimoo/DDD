@@ -19,12 +19,10 @@ public class Gathering {
     private final Guid creator;
     private final String location;
     private final Integer maximumNumberOfAttendees;
-    private Instant invitationExpireAt;
     private final Integer numberOfAttendees;
     private final Collection<Attendee> attendees;
     private final Collection<Invitation> invitations;
-    // private Collection<Guid> invitations; Id로만 참조하는게 낫지 않을지. 상태 계속 동기화해야함
-    // Invitation이 별도 엔티티는 아닌건가?
+    private Instant invitationExpireAt;
 
     public Gathering(Guid id, GatheringType type, String name, Instant scheduledAt, Guid creator, String location,
                      Integer maximumNumberOfAttendees, Instant invitationExpireAt, Integer numberOfAttendees,

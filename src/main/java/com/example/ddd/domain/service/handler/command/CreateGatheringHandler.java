@@ -8,6 +8,7 @@ import com.example.ddd.domain.port.out.gathering.PersistGatheringPort;
 import com.example.ddd.domain.port.out.user.FindUserByIdPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class CreateGatheringHandler {
     private final FindUserByIdPort findUserByIdPort;
     private final PersistGatheringPort persistGatheringPort;
-
+    @Transactional
     public Guid handle(CreateGatheringCommand command) {
         boolean isExistentUser = findUserByIdPort.findUserById(command.userId()).isPresent();
 
@@ -32,7 +33,7 @@ public class CreateGatheringHandler {
 
         );
 
-        Gathering persistedGathering = persistGatheringPort.insert(gathering);
+        Gathering persistedGathering = persistGatheringPort.persist(gathering, command.requestedAt(), command.requestedBy());
         return persistedGathering.getId();
     }
 

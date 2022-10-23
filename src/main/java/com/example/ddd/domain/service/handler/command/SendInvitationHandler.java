@@ -52,7 +52,7 @@ public class SendInvitationHandler {
                 });
 
         //persist invitations.
-        Invitation invitationCreated = persistInvitationPort.persist(invitation);
+        Invitation invitationCreated = persistInvitationPort.persist(invitation, command.requestedAt(), command.requestedBy());
         invitationCreatedPublisher.publish(new InvitationCreatedEvent(invitationCreated));
         // - invitation persist event 받아 gathering에 invitaiton 추가
         //gatheringInvited.addInvitation(invitations,command.requestedAt());

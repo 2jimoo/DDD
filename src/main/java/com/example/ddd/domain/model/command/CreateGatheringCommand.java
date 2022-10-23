@@ -12,5 +12,6 @@ public record CreateGatheringCommand(String name,
                                      Guid userId,
                                      Optional<String> location,
                                      Optional<Integer> maximumNumberOfAttendees,
-                                     Optional<Integer> invitationValidBeforeInHours) {
+                                     Optional<Integer> invitationValidBeforeInHours
+        , Instant requestedAt, Guid requestedBy) {
 }
