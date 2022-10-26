@@ -19,7 +19,8 @@ import java.time.Instant;
 public class InvitationEntity {
     @Id
     private String id;
-    private String userId;
+    private String receiverId;
+
     private String gatheringId;
     private InvitationStatus status;
     private Instant createdAt;

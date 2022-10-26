@@ -5,6 +5,6 @@ import com.example.ddd.domain.model.Invitation;
 
 import java.util.Optional;
 
-public interface FindInvitationByIdAndUserIdPort {
-    Optional<Invitation> findById(Guid id, Guid userId);
+public interface FindInvitationByIdAndReceiverIdPort {
+    Optional<Invitation> findByIdAndReceiverId(Guid id, Guid receiverId);
 }

@@ -8,10 +8,10 @@ import com.example.ddd.domain.port.out.user.FindAllUserByIdsPort;
 import com.example.ddd.domain.port.out.user.FindUserByEmailPort;
 import com.example.ddd.domain.port.out.user.FindUserByIdPort;
 import com.example.ddd.domain.port.out.user.PersistUserPort;
+import com.example.ddd.webapp.out.repository.User.UserEntity;
 import com.example.ddd.webapp.out.repository.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -24,22 +24,44 @@ public class UserAdapter implements FindUserByIdPort, FindAllUserByIdsPort, Find
 
     @Override
     public Optional<User> findUserByEmail(Email email) {
-        return Optional.empty();
+        return userRepository.findByEmail(email.email()).map(this::mapToDomainEntity);
     }
 
     @Override
     public Optional<User> findUserById(Guid userId) {
-        return Optional.empty();
+        return userRepository.findById(userId.guid()).map(this::mapToDomainEntity);
     }
 
     @Override
     public Collection<User> findAllByIds(Collection<Guid> ids) {
-        return null;
+        return userRepository.findAllById(ids.stream().map(Guid::guid).toList()).stream().map(this::mapToDomainEntity).toList();
     }
 
     @Override
-    @Transactional
     public User persist(User user, Instant requestedAt, Guid requestedBy) {
-        return null;
+        UserEntity savedUserEntity = userRepository.save(mapToDbEntity(user, requestedAt, requestedBy));
+        return mapToDomainEntity(savedUserEntity);
+    }
+
+    protected UserEntity mapToDbEntity(User user, Instant requestedAt, Guid requestedBy) {
+        return new UserEntity(
+                user.getUserId().guid(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail().email(),
+                requestedAt,
+                requestedBy.guid(),
+                requestedAt,
+                requestedBy.guid()
+        );
+    }
+
+    protected User mapToDomainEntity(UserEntity userEntity) {
+        return new User(
+                Guid.of(userEntity.getUserId()),
+                userEntity.getFirstName(),
+                userEntity.getLastName(),
+                Email.of(userEntity.getEmail())
+        );
     }
 }

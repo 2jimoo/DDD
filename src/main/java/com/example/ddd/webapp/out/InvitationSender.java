@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 public class InvitationSender implements SendInvitationPort {
     @Override
     public Guid send(Invitation invitation) {
-        return null;
+        return invitation.getId();
     }
 }

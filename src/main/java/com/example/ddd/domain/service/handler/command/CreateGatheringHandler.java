@@ -18,6 +18,7 @@ import java.util.UUID;
 public class CreateGatheringHandler {
     private final FindUserByIdPort findUserByIdPort;
     private final PersistGatheringPort persistGatheringPort;
+
     @Transactional
     public Guid handle(CreateGatheringCommand command) {
         boolean isExistentUser = findUserByIdPort.findUserById(command.userId()).isPresent();

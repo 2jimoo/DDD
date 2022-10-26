@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 @Getter
 public class Invitation {
     private final Guid id;
-    private final Guid userId; // receiver?
+    private final Guid receiverId;
     private final Guid gatheringId;
     private final Instant createdAt;
     private InvitationStatus status;
@@ -16,7 +16,7 @@ public class Invitation {
 
     public Invitation(Guid id, Guid receiverId, Guid gatheringId, InvitationStatus status, Instant createdAt) {
         this.id = id;
-        this.userId = receiverId;
+        this.receiverId = receiverId;
         this.gatheringId = gatheringId;
         this.status = status;
         this.createdAt = createdAt;
@@ -31,7 +31,7 @@ public class Invitation {
     }
 
     public static Invitation copyOf(Invitation invitation) {
-        return new Invitation(invitation.id, invitation.userId, invitation.gatheringId, invitation.status, invitation.createdAt);
+        return new Invitation(invitation.id, invitation.receiverId, invitation.gatheringId, invitation.status, invitation.createdAt);
     }
 
     // functional IF의 인수나 반환값으로 domain model 쓰면 안 되는 이유
