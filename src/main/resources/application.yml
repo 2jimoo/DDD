@@ -22,5 +22,4 @@ spring:
           auto: create
 # https://bamdule.tistory.com/246
 # https://umanking.github.io/2019/04/12/jpa-h2-setting/
-server:
-  port: 8089
+

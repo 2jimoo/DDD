@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @Data
 @Entity
-@Table(name = Const.GATHERING)
+@Table(name = Const.GATHERINGS)
 @NoArgsConstructor
 @AllArgsConstructor
 public class GatheringEntity {
@@ -32,7 +32,7 @@ public class GatheringEntity {
     @ElementCollection
     private Collection<String> attendeeIds;
     @OneToMany
-    @JoinColumn(name = "invitationientity_id")
+    @JoinColumn(name = "invitation_id")
     private Collection<InvitationEntity> invitations;
 
     //DB 삽입, 갱신 정보

@@ -13,7 +13,7 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = Const.INVITATION)
+@Table(name = Const.INVITATIONS)
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvitationEntity {

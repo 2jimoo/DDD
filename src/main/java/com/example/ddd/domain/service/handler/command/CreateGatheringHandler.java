@@ -4,6 +4,7 @@ import com.example.ddd.domain.model.Gathering;
 import com.example.ddd.domain.model.Guid;
 import com.example.ddd.domain.model.User;
 import com.example.ddd.domain.model.command.CreateGatheringCommand;
+import com.example.ddd.domain.port.in.CreateGatheringUseCase;
 import com.example.ddd.domain.port.out.gathering.PersistGatheringPort;
 import com.example.ddd.domain.port.out.user.FindUserByIdPort;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +16,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class CreateGatheringHandler {
+public class CreateGatheringHandler implements CreateGatheringUseCase {
     private final FindUserByIdPort findUserByIdPort;
     private final PersistGatheringPort persistGatheringPort;
 
     @Transactional
-    public Guid handle(CreateGatheringCommand command) {
-        boolean isExistentUser = findUserByIdPort.findUserById(command.userId()).isPresent();
-
+    public Gathering handle(CreateGatheringCommand command) {
         Gathering gathering = Gathering.of(
                 new Guid(UUID.randomUUID().toString()), command.type(), command.name(), command.scheduledAt(),
                 command.userId(), command.location(), command.maximumNumberOfAttendees(),
@@ -35,7 +34,7 @@ public class CreateGatheringHandler {
         );
 
         Gathering persistedGathering = persistGatheringPort.persist(gathering, command.requestedAt(), command.requestedBy());
-        return persistedGathering.getId();
+        return persistedGathering;
     }
 
 }

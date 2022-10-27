@@ -12,7 +12,7 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = Const.USER)
+@Table(name = Const.USERS)
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
