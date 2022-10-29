@@ -31,8 +31,8 @@ public class GatheringEntity {
 
     @ElementCollection
     private Collection<String> attendeeIds;
-    @OneToMany
-    @JoinColumn(name = "gathering_id")
+    @OneToMany(mappedBy = "gatheringId")
+    //@JoinColumn(name = "gathering_id")
     private Collection<InvitationEntity> invitations;
 
     //DB 삽입, 갱신 정보

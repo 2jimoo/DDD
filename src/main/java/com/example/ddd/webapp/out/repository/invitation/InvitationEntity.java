@@ -22,7 +22,7 @@ public class InvitationEntity {
     private String id;
     private String receiverId;
 
-    @Column(name = "gathering_id")
+   //@Column(name = "gathering_id")
     private String gatheringId;
     private InvitationStatus status;
     private Instant createdAt;
