@@ -1,44 +1,30 @@
 package com.example.ddd.domain.model;
 
 import com.example.ddd.exception.Contracts;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 @Getter
+@AllArgsConstructor
 public class Gathering {
-    private final Guid id;
-    private final GatheringType type;
-    private final String name;
-    private final Instant scheduledAt;
-    private final Guid creator;
-    private final String location;
-    private final Integer maximumNumberOfAttendees;
-    private final Integer numberOfAttendees;
-    private final Collection<Attendee> attendees;
-    private final Collection<Invitation> invitations;
+    private  Guid id;
+    private GatheringType type;
+    private String name;
+    private Instant scheduledAt;
+    private  Guid creator;
+    private  String location;
+    private  Integer maximumNumberOfAttendees;
+    private  Integer numberOfAttendees;
+    private Collection<Attendee> attendees;
+    private Collection<Invitation> invitations;
     private Instant invitationExpireAt;
-
-    public Gathering(Guid id, GatheringType type, String name, Instant scheduledAt, Guid creator, String location,
-                     Integer maximumNumberOfAttendees, Instant invitationExpireAt, Integer numberOfAttendees,
-                     Collection<Attendee> attendees, Collection<Invitation> invitations) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.scheduledAt = scheduledAt;
-        this.creator = creator;
-        this.location = location;
-        this.maximumNumberOfAttendees = maximumNumberOfAttendees;
-        this.invitationExpireAt = invitationExpireAt;
-        this.numberOfAttendees = numberOfAttendees;
-        this.attendees = attendees;
-        this.invitations = invitations;
-    }
 
     public static Gathering of(
             Guid id,
@@ -70,13 +56,13 @@ public class Gathering {
                     }
             );
         }
-        return new Gathering(id, type, name, scheduledAt, creator, location.orElse(null), maximumNumberOfAttendees.orElse(Integer.MAX_VALUE),
-                invitationExpireAt.isPresent() ? Instant.ofEpochSecond(invitationExpireAt.get()) : null, numberOfAttendees.isPresent() ? numberOfAttendees.get() : 0, new HashSet<>(), new HashSet<>());
+        return new Gathering(id, type, name, scheduledAt, creator, location.orElse(null), maximumNumberOfAttendees.orElse(Integer.MAX_VALUE), numberOfAttendees.orElse(0),
+                new ArrayList<>(), new ArrayList<>(), invitationExpireAt.map(Instant::ofEpochSecond).orElse(null));
     }
 
-    public void addInvitation(Collection<Invitation> invitations, Instant requestedAt) {
+    public void addInvitation(Invitation invitation, Instant requestedAt) {
         this.invitationExpireAt = Instant.ofEpochSecond(requestedAt.getEpochSecond() + 60 * 60);
-        this.invitations.addAll(invitations);
+        this.invitations.add(invitation);
     }
 
     public boolean isFull() {

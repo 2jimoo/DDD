@@ -28,7 +28,7 @@ public class CreateGatheringHandler implements CreateGatheringUseCase {
                 command.invitationValidBeforeInHours(), command.maximumNumberOfAttendees(),
                 () -> {
                     Optional<User> userById = findUserByIdPort.findUserById(command.userId());
-                    return userById.isEmpty();
+                    return userById.isPresent();
                 }
 
         );

@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
 @Data
-@Entity
+@Entity(name = Const.INVITATION)
 @Table(name = Const.INVITATIONS)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class InvitationEntity {
     private String id;
     private String receiverId;
 
+    @Column(name = "gathering_id")
     private String gatheringId;
     private InvitationStatus status;
     private Instant createdAt;

@@ -9,6 +9,9 @@ import com.example.ddd.webapp.out.repository.invitation.InvitationEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Component
 public class GatheringEntityMapper {
@@ -51,16 +54,17 @@ public class GatheringEntityMapper {
                 Guid.of(entity.getCreator()),
                 entity.getLocation(),
                 entity.getMaximumNumberOfAttendees(),
-                entity.getInvitationExpireAt(),
                 entity.getNumberOfAttendees(),
-                entity.getInvitations().stream().map(e -> new Attendee(Guid.of(e.getGatheringId()), Guid.of(e.getReceiverId()), e.getCreatedAt())).toList(),
-                entity.getInvitations().stream().map(e -> new Invitation(
+                new HashSet<>(entity.getInvitations().stream().map(e -> new Attendee(Guid.of(e.getGatheringId()),
+                        Guid.of(e.getReceiverId()), e.getCreatedAt())).collect(Collectors.toSet())),
+                new HashSet<>(entity.getInvitations().stream().map(e -> new Invitation(
                         Guid.of(e.getId()),
                         Guid.of(e.getReceiverId()),
                         Guid.of(e.getGatheringId()),
                         e.getStatus(),
                         e.getCreatedAt()
-                )).toList()
+                )).collect(Collectors.toSet())),
+                entity.getInvitationExpireAt()
         );
     }
 }

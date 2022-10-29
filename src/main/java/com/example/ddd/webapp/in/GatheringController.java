@@ -5,23 +5,33 @@ import com.example.ddd.domain.model.GatheringType;
 import com.example.ddd.domain.model.Guid;
 import com.example.ddd.domain.model.command.CreateGatheringCommand;
 import com.example.ddd.domain.port.in.CreateGatheringUseCase;
+import com.example.ddd.domain.port.in.GetGatheringByIdUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/gatherings")
 @RequiredArgsConstructor
 public class GatheringController {
     private final CreateGatheringUseCase createGatheringUseCase;
+    private final GetGatheringByIdUseCase getGatheringByIdUseCase;
 
-    @PostMapping("/gatherings")
+    @GetMapping("/{id}")
+    Gathering get(@PathVariable String id){
+        return getGatheringByIdUseCase.getById(Guid.of(id)).orElseThrow(
+                ()->{throw new RuntimeException("Gathering %s is not found.".formatted(id));}
+        );
+    }
+
+
+    @PostMapping
     Gathering create(@RequestBody CreateGatheringRequest request) {
         return createGatheringUseCase.handle(
                 new CreateGatheringCommand(
@@ -40,7 +50,8 @@ public class GatheringController {
 
     record CreateGatheringRequest(@NonNull String name,
                                   @NonNull String type,
-                                  @NonNull Instant scheduledAt,
+                                  @NonNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant scheduledAt,
+                                  //2007-02-08
                                   @NonNull String userId,
                                   @Nullable String location,
                                   @Nullable Integer maximumNumberOfAttendees,

@@ -4,8 +4,9 @@ import com.example.ddd.domain.model.Gathering;
 import com.example.ddd.domain.model.Guid;
 import com.example.ddd.domain.model.Invitation;
 import com.example.ddd.domain.model.User;
-import com.example.ddd.domain.model.command.SendInvitationCommand;
+import com.example.ddd.domain.model.command.CreateInvitationCommand;
 import com.example.ddd.domain.model.event.InvitationCreatedEvent;
+import com.example.ddd.domain.port.in.CreateInvitationUseCase;
 import com.example.ddd.domain.port.out.gathering.FindGatheringByIdPort;
 import com.example.ddd.domain.port.out.gathering.MergeGatheringPort;
 import com.example.ddd.domain.port.out.invitation.PersistInvitationPort;
@@ -24,18 +25,17 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SendInvitationHandler {
+public class CreateInvitationHandler implements CreateInvitationUseCase {
     private final FindUserByIdPort findUserByIdPort;
     private final FindGatheringByIdPort findGatheringByIdPort;
     private final PersistInvitationPort persistInvitationPort;
-
     private final EventPublisher<InvitationCreatedEvent> invitationCreatedPublisher;
     private final MergeGatheringPort mergeGatheringPort;
     private final SendInvitationPort sendInvitationPort;
 
     @Transactional
-    public Guid handle(SendInvitationCommand command) {
-        //create invitations.
+    public Invitation handle(CreateInvitationCommand command) {
+        Optional<Gathering> gathering = findGatheringByIdPort.findById(command.gatheringId());
         Invitation invitation = Invitation.of(
                 Guid.of(UUID.randomUUID().toString()),
                 command.senderId(),
@@ -43,7 +43,6 @@ public class SendInvitationHandler {
                 command.requestedAt(),
                 () -> {
                     Optional<User> user = findUserByIdPort.findUserById(command.senderId());
-                    Optional<Gathering> gathering = findGatheringByIdPort.findById(command.gatheringId());
                     if (gathering.isEmpty() || user.isEmpty()) {
                         return false;
                     } else {
@@ -51,15 +50,15 @@ public class SendInvitationHandler {
                     }
                 });
 
-        //persist invitations.
         Invitation invitationCreated = persistInvitationPort.persist(invitation, command.requestedAt(), command.requestedBy());
         invitationCreatedPublisher.publish(new InvitationCreatedEvent(invitationCreated));
-        // - invitation persist event 받아 gathering에 invitaiton 추가
-        //gatheringInvited.addInvitation(invitations,command.requestedAt());
-        //mergeGatheringPort.merge(gatheringInvited);
+
+        Gathering gatheringInvited = gathering.get();
+        gatheringInvited.addInvitation(invitationCreated, command.requestedAt());
+        mergeGatheringPort.merge(gatheringInvited, command.requestedAt(), command.requestedBy());
+
         // - invitation persist event 받아 발송
         //sendInvitationPort.send(invitation);
-
-        return invitationCreated.getId();
+        return invitationCreated;
     }
 }

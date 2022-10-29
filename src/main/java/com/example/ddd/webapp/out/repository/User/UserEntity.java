@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.time.Instant;
 
 @Data
-@Entity
+@Entity(name = Const.USER)
 @Table(name = Const.USERS)
 @NoArgsConstructor
 @AllArgsConstructor

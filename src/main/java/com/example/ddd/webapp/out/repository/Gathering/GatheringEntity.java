@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.Collection;
 
 @Data
-@Entity
+@Entity(name = Const.GATHERING)
 @Table(name = Const.GATHERINGS)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class GatheringEntity {
     @ElementCollection
     private Collection<String> attendeeIds;
     @OneToMany
-    @JoinColumn(name = "invitation_id")
+    @JoinColumn(name = "gathering_id")
     private Collection<InvitationEntity> invitations;
 
     //DB 삽입, 갱신 정보
