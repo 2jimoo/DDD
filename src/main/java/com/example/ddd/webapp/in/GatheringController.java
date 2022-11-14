@@ -24,9 +24,11 @@ public class GatheringController {
     private final GetGatheringByIdUseCase getGatheringByIdUseCase;
 
     @GetMapping("/{id}")
-    Gathering get(@PathVariable String id){
+    Gathering get(@PathVariable String id) {
         return getGatheringByIdUseCase.getById(Guid.of(id)).orElseThrow(
-                ()->{throw new RuntimeException("Gathering %s is not found.".formatted(id));}
+                () -> {
+                    throw new RuntimeException("Gathering %s is not found.".formatted(id));
+                }
         );
     }
 

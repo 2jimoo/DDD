@@ -14,6 +14,7 @@ import java.util.Optional;
 public class GatheringService implements GetGatheringByIdUseCase {
 
     private final FindGatheringByIdPort findGatheringByIdPort;
+
     @Override
     public Optional<Gathering> getById(Guid id) {
         return findGatheringByIdPort.findById(id);

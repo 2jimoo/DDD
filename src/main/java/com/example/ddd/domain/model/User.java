@@ -1,17 +1,22 @@
 package com.example.ddd.domain.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.function.Supplier;
 
 @Getter
-@AllArgsConstructor
 public class User {
-    private Guid userId;
-    private String firstName;
-    private String lastName;
-    private Email email;
+    private final Guid userId;
+    private final String firstName;
+    private final String lastName;
+    private final Email email;
+
+    private User(Guid userId, String firstName, String lastName, Email email) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 
     public static User of(Guid userId, String firstName, String lastName, Email email, Supplier<Boolean> uniqueEmailValidate) {
         if (uniqueEmailValidate.get()) {

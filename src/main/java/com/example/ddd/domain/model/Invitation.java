@@ -1,5 +1,6 @@
 package com.example.ddd.domain.model;
 
+import com.example.ddd.domain.model.contentprovider.InvitationContentProvider;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -14,7 +15,7 @@ public class Invitation {
     private InvitationStatus status;
 
 
-    public Invitation(Guid id, Guid receiverId, Guid gatheringId, InvitationStatus status, Instant createdAt) {
+    private Invitation(Guid id, Guid receiverId, Guid gatheringId, Instant createdAt, InvitationStatus status) {
         this.id = id;
         this.receiverId = receiverId;
         this.gatheringId = gatheringId;
@@ -22,16 +23,26 @@ public class Invitation {
         this.createdAt = createdAt;
     }
 
+    public static Invitation translateOf(InvitationContentProvider contentProvider) {
+        return new Invitation(
+                contentProvider.id(),
+                contentProvider.receiverId(),
+                contentProvider.gatheringId(),
+                contentProvider.createdAt(),
+                contentProvider.status()
+        );
+    }
+
     public static Invitation of(Guid id, Guid receiverId, Guid gatheringId, Instant createdAt, Supplier<Boolean> existentUserIdInExistentGatheringValidator) {
 
         if (!existentUserIdInExistentGatheringValidator.get()) {
             throw new IllegalArgumentException("receiver %s or gathering %s does not exist.".formatted(receiverId, gatheringId));
         }
-        return new Invitation(id, receiverId, gatheringId, InvitationStatus.VALID, createdAt);
+        return new Invitation(id, receiverId, gatheringId, createdAt, InvitationStatus.VALID);
     }
 
     public static Invitation copyOf(Invitation invitation) {
-        return new Invitation(invitation.id, invitation.receiverId, invitation.gatheringId, invitation.status, invitation.createdAt);
+        return new Invitation(invitation.id, invitation.receiverId, invitation.gatheringId, invitation.createdAt, invitation.status);
     }
 
     // functional IF의 인수나 반환값으로 domain model 쓰면 안 되는 이유

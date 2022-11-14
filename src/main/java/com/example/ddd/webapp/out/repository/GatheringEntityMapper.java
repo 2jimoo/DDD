@@ -1,16 +1,14 @@
 package com.example.ddd.webapp.out.repository;
 
-import com.example.ddd.domain.model.Attendee;
-import com.example.ddd.domain.model.Gathering;
-import com.example.ddd.domain.model.Guid;
-import com.example.ddd.domain.model.Invitation;
+import com.example.ddd.domain.model.*;
+import com.example.ddd.domain.model.contentprovider.GatheringContentProvider;
+import com.example.ddd.domain.model.contentprovider.InvitationContentProvider;
 import com.example.ddd.webapp.out.repository.Gathering.GatheringEntity;
 import com.example.ddd.webapp.out.repository.invitation.InvitationEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,7 +24,7 @@ public class GatheringEntityMapper {
                 domainEntity.getMaximumNumberOfAttendees(),
                 domainEntity.getInvitationExpireAt(),
                 domainEntity.getNumberOfAttendees(),
-                domainEntity.getAttendees().stream().map(attendee -> attendee.getUserId().guid()).toList(),
+                domainEntity.getAttendees().stream().map(attendee -> attendee.userId().guid()).toList(),
                 domainEntity.getInvitations().stream().map(e -> new InvitationEntity(
                         e.getId().guid(),
                         e.getReceiverId().guid(),
@@ -46,25 +44,103 @@ public class GatheringEntityMapper {
     }
 
     public Gathering mapToDomainEntity(GatheringEntity entity) {
-        return new Gathering(
-                Guid.of(entity.getId()),
-                entity.getType(),
-                entity.getName(),
-                entity.getScheduledAt(),
-                Guid.of(entity.getCreator()),
-                entity.getLocation(),
-                entity.getMaximumNumberOfAttendees(),
-                entity.getNumberOfAttendees(),
-                new HashSet<>(entity.getInvitations().stream().map(e -> new Attendee(Guid.of(e.getGatheringId()),
-                        Guid.of(e.getReceiverId()), e.getCreatedAt())).collect(Collectors.toSet())),
-                new HashSet<>(entity.getInvitations().stream().map(e -> new Invitation(
-                        Guid.of(e.getId()),
-                        Guid.of(e.getReceiverId()),
-                        Guid.of(e.getGatheringId()),
-                        e.getStatus(),
-                        e.getCreatedAt()
-                )).collect(Collectors.toSet())),
-                entity.getInvitationExpireAt()
+        return Gathering.translateOf(
+                new GatheringH2dbEntityContentProvider(entity)
         );
+    }
+
+
+    protected class GatheringH2dbEntityContentProvider implements GatheringContentProvider {
+
+        private final GatheringEntity gatheringEntity;
+
+        public GatheringH2dbEntityContentProvider(GatheringEntity gatheringEntity) {
+            this.gatheringEntity = gatheringEntity;
+        }
+
+        @Override
+        public Guid id() {
+            return Guid.of(gatheringEntity.getId());
+        }
+
+        @Override
+        public GatheringType type() {
+            return gatheringEntity.getType();
+        }
+
+        @Override
+        public String name() {
+            return gatheringEntity.getName();
+        }
+
+        @Override
+        public Instant scheduledAt() {
+            return gatheringEntity.getScheduledAt();
+        }
+
+        @Override
+        public Guid creator() {
+            return Guid.of(gatheringEntity.getCreator());
+        }
+
+        @Override
+        public String location() {
+            return gatheringEntity.getLocation();
+        }
+
+        @Override
+        public Integer maximumNumberOfAttendees() {
+            return gatheringEntity.getMaximumNumberOfAttendees();
+        }
+
+        @Override
+        public Integer numberOfAttendees() {
+            return gatheringEntity.getMaximumNumberOfAttendees();
+        }
+
+        @Override
+        public Collection<Attendee> attendees() {
+            return gatheringEntity.getInvitations().stream().map(e -> new Attendee(Guid.of(e.getGatheringId()),
+                    Guid.of(e.getReceiverId()), e.getCreatedAt())).collect(Collectors.toSet());
+        }
+
+        @Override
+        public Collection<Invitation> invitations() {
+            return gatheringEntity.getInvitations().stream().map(e ->
+                    Invitation.translateOf(
+                            new InvitationContentProvider() {
+                                @Override
+                                public Guid id() {
+                                    return Guid.of(e.getGatheringId());
+                                }
+
+                                @Override
+                                public Guid receiverId() {
+                                    return Guid.of(e.getReceiverId());
+                                }
+
+                                @Override
+                                public Guid gatheringId() {
+                                    return Guid.of(e.getGatheringId());
+                                }
+
+                                @Override
+                                public Instant createdAt() {
+                                    return e.getCreatedAt();
+                                }
+
+                                @Override
+                                public InvitationStatus status() {
+                                    return e.getStatus();
+                                }
+                            }
+                    )
+            ).collect(Collectors.toSet());
+        }
+
+        @Override
+        public Instant invitationExpireAt() {
+            return gatheringEntity.getInvitationExpireAt();
+        }
     }
 }
