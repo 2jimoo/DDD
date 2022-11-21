@@ -2,6 +2,7 @@ package com.example.ddd.domain.model;
 
 import com.example.ddd.domain.model.contentprovider.GatheringContentProvider;
 import com.example.ddd.exception.Contracts;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.Instant;
@@ -13,19 +14,19 @@ import java.util.function.Supplier;
 
 @Getter
 public class Gathering {
-    private final Guid id;
-    private final GatheringType type;
-    private final String name;
-    private final Instant scheduledAt;
-    private final Guid creator;
-    private final String location;
-    private final Integer maximumNumberOfAttendees;
-    private final Integer numberOfAttendees;
-    private final Collection<Attendee> attendees;
-    private final Collection<Invitation> invitations;
+    private  Guid id;
+    private  GatheringType type;
+    private  String name;
+    private  Instant scheduledAt;
+    private  Guid creator;
+    private  String location;
+    private  Integer maximumNumberOfAttendees;
+    private  Integer numberOfAttendees;
+    private  Collection<Attendee> attendees;
+    private  Collection<Invitation> invitations;
     private Instant invitationExpireAt;
 
-    private Gathering(Guid id, GatheringType type, String name, Instant scheduledAt, Guid creator, String location, Integer maximumNumberOfAttendees, Integer numberOfAttendees, Collection<Attendee> attendees, Collection<Invitation> invitations, Instant invitationExpireAt) {
+    protected Gathering(Guid id, GatheringType type, String name, Instant scheduledAt, Guid creator, String location, Integer maximumNumberOfAttendees, Integer numberOfAttendees, Collection<Attendee> attendees, Collection<Invitation> invitations, Instant invitationExpireAt) {
         this.id = id;
         this.type = type;
         this.name = name;
