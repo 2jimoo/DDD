@@ -4,7 +4,9 @@ import com.example.ddd.domain.model.*;
 import com.example.ddd.domain.model.contentprovider.GatheringContentProvider;
 import com.example.ddd.domain.model.contentprovider.InvitationContentProvider;
 import com.example.ddd.webapp.out.repository.Gathering.GatheringEntity;
+import com.example.ddd.webapp.out.repository.Gathering.GatheringRepository;
 import com.example.ddd.webapp.out.repository.invitation.InvitationEntity;
+import com.example.ddd.webapp.out.repository.invitation.InvitationRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -42,10 +44,35 @@ public class GatheringEntityMapper {
                 requestedBy.guid()
         );
     }
+//
+//    public Gathering mapToDomainEntity(GatheringEntity entity) {
+//        return Gathering.translateOf(
+//                new GatheringH2dbEntityContentProvider(entity)
+//        );
+//    }
 
     public Gathering mapToDomainEntity(GatheringEntity entity) {
-        return Gathering.translateOf(
-                new GatheringH2dbEntityContentProvider(entity)
+        return new GatheringRepository.GatheringProxy(
+                Guid.of(entity.getId()),
+                entity.getType(),
+                entity.getName(),
+                entity.getScheduledAt(),
+                Guid.of(entity.getCreator()),
+                entity.getLocation(),
+                entity.getMaximumNumberOfAttendees(),
+                entity.getNumberOfAttendees(),
+                entity.getInvitations().stream().map(e -> new Attendee(Guid.of(e.getGatheringId()),
+                        Guid.of(e.getReceiverId()), e.getCreatedAt())).collect(Collectors.toSet()),
+                entity.getInvitations().stream().map(
+                        e -> new InvitationRepository.InvitationProxy(
+                                Guid.of(e.getId()),
+                                Guid.of(e.getReceiverId()),
+                                Guid.of(e.getGatheringId()),
+                                e.getCreatedAt(),
+                                e.getStatus()
+                        )
+                ).map(p -> (Invitation) p).toList(),
+                entity.getInvitationExpireAt()
         );
     }
 

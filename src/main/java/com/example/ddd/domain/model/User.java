@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 
 @Getter
 public class User {
-    private final Guid userId;
-    private final String firstName;
-    private final String lastName;
-    private final Email email;
+    private  Guid userId;
+    private  String firstName;
+    private  String lastName;
+    private  Email email;
 
-    private User(Guid userId, String firstName, String lastName, Email email) {
+    protected User(Guid userId, String firstName, String lastName, Email email) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

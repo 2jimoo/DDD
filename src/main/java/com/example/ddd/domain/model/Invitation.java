@@ -8,20 +8,22 @@ import java.util.function.Supplier;
 
 @Getter
 public class Invitation {
-    private final Guid id;
-    private final Guid receiverId;
-    private final Guid gatheringId;
-    private final Instant createdAt;
+    private  Guid id;
+    private  Guid receiverId;
+    private  Guid gatheringId;
+    private  Instant createdAt;
     private InvitationStatus status;
 
 
-    private Invitation(Guid id, Guid receiverId, Guid gatheringId, Instant createdAt, InvitationStatus status) {
+    protected Invitation(Guid id, Guid receiverId, Guid gatheringId, Instant createdAt, InvitationStatus status) {
         this.id = id;
         this.receiverId = receiverId;
         this.gatheringId = gatheringId;
         this.status = status;
         this.createdAt = createdAt;
     }
+
+
 
     public static Invitation translateOf(InvitationContentProvider contentProvider) {
         return new Invitation(
