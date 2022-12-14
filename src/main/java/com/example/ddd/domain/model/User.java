@@ -1,10 +1,12 @@
 package com.example.ddd.domain.model;
 
+import com.example.ddd.utils.EntityCommonInfo;
 import lombok.Getter;
 
 import java.util.function.Supplier;
 
 @Getter
+@EntityCommonInfo(createdAt = "2022-12-13T07:20:31.017493Z", createdBy= "test")
 public class User {
     private  Guid userId;
     private  String firstName;
