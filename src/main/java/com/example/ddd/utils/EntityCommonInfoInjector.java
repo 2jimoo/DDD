@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Aspect
 @Component
 public class EntityCommonInfoInjector {
 
@@ -21,18 +20,14 @@ public class EntityCommonInfoInjector {
     //    (ex.lombok 내부 - AsmUtil, delombok....)
     //    실행 시간 중 .java파일을 읽어서 변경한다. -> 컴파일러 수준의 작성이 필요하다.
     //    실행 시간 중 .class파일을 읽어서 변경한다. ->기존의 클래스에 코드(파일,데이터)를 덧붙여서 변경할 수 있게 된다.
-    // 2. 조작한 클래스를 원본 .class로 덮어쓰고 디컴파일하는건가? 클래스로더하기엔 시점 잘 모르겠음...
-    //    (클래스가 상위 클래스 경로에 있으면 클래스가 BCI되지 않고, 없으면 상대 경로에서 로드되고 BCI됨)
+    // 2. javac가 컴파일한 AST에서 조작한 클래스를 넣고 최종 AST로 바이트코드 생성
 
     //[task]
     //1. public으로 field만 넣어보기
     //2. private field로 public getter/setter method 넣어보기
     //3. private field, 접근 레벨,getter/setter 지정받아 method 넣기
 
-    @Before("@annotation(com.example.ddd.utils.EntityCommonInfo)")
-    public void addFields(JoinPoint joinPoint) throws IOException {
-        Class<?> clazz=joinPoint.getTarget().getClass();
-
+    public void addFields(Class<?> clazz) throws IOException {
         // ClassReader - 외부의 .class를 읽어오는 클래스이다.
         ClassReader classReader = new ClassReader(clazz.getName());
 

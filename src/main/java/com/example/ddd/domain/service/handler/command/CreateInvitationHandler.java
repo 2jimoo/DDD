@@ -31,7 +31,6 @@ public class CreateInvitationHandler implements CreateInvitationUseCase {
     private final PersistInvitationPort persistInvitationPort;
     private final EventPublisher<InvitationCreatedEvent> invitationCreatedPublisher;
     private final MergeGatheringPort mergeGatheringPort;
-    private final SendInvitationPort sendInvitationPort;
 
     @Transactional
     public Invitation handle(CreateInvitationCommand command) {

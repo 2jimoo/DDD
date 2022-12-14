@@ -36,6 +36,7 @@ dependencies {
 	//bci
 	implementation 'asm:asm-all:3.3.1'
 	implementation 'asm:asm-parent:3.3.1'
+	implementation 'com.google.auto.service:auto-service:1.0.1'
 
 }
 

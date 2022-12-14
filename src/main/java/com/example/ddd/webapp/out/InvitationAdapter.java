@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class InvitationAdapter implements PersistInvitationPort, FindInvitationByIdAndReceiverIdPort, FindAllInvitationByIdsPort, MergeInvitationPort {
+public class InvitationAdapter implements PersistInvitationPort, FindInvitationByIdAndReceiverIdPort, FindAllInvitationByIdsPort, MergeInvitationPort, SendInvitationPort {
     private final InvitationRepository invitationRepository;
 
     private final InvitationEntityMapper invitationEntityMapper;
@@ -59,4 +59,8 @@ public class InvitationAdapter implements PersistInvitationPort, FindInvitationB
         return invitationEntityMapper.mapToDomainEntity(invitationEntity);
     }
 
+    @Override
+    public Guid send(Invitation invitation) {
+        return null;
+    }
 }
