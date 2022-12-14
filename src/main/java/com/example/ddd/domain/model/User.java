@@ -20,8 +20,8 @@ public class User {
         this.email = email;
     }
 
-    public static User of(Guid userId, String firstName, String lastName, Email email, Supplier<Boolean> uniqueEmailValidate) {
-        if (uniqueEmailValidate.get()) {
+    public static User of(Guid userId, String firstName, String lastName, Email email, Supplier<Boolean> duplicatedEmilValidate) {
+        if (duplicatedEmilValidate.get()) {
             throw new IllegalArgumentException("Email %s is duplicated.".formatted(email.email()));
         }
         return new User(userId, firstName, lastName, email);

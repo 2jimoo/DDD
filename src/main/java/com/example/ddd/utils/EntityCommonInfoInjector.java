@@ -1,12 +1,19 @@
 package com.example.ddd.utils;
 
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+@Aspect
+@Component
 public class EntityCommonInfoInjector {
 
     //[방법] BCI(Byte Code Injection)
@@ -21,7 +28,11 @@ public class EntityCommonInfoInjector {
     //1. public으로 field만 넣어보기
     //2. private field로 public getter/setter method 넣어보기
     //3. private field, 접근 레벨,getter/setter 지정받아 method 넣기
-    public void addFields(Class<?> clazz) throws IOException {
+
+    @Before("@annotation(com.example.ddd.utils.EntityCommonInfo)")
+    public void addFields(JoinPoint joinPoint) throws IOException {
+        Class<?> clazz=joinPoint.getTarget().getClass();
+
         // ClassReader - 외부의 .class를 읽어오는 클래스이다.
         ClassReader classReader = new ClassReader(clazz.getName());
 
