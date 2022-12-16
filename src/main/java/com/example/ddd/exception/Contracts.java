@@ -2,15 +2,15 @@ package com.example.ddd.exception;
 
 public class Contracts {
 
-    public static void requires(boolean precondition, String message) {
+    public static void requires(boolean precondition, Error error) {
         if (!precondition) {
-            throw new ContractException(message);
+            throw new ContractException(error);
         }
     }
 
-    public static void ensures(boolean postcondition, String message) {
+    public static void ensures(boolean postcondition, Error error) {
         if (!postcondition) {
-            throw new ContractException(message);
+            throw new ContractException(error);
         }
     }
 }

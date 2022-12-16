@@ -1,7 +1,7 @@
 package com.example.ddd.exception;
 
-public class ContractException extends RuntimeException {
-    public ContractException(String message) {
-        super(message);
+public class ContractException extends ErrorException {
+    public ContractException(Error error) {
+        super(error);
     }
 }
